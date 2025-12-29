@@ -1,73 +1,114 @@
 ---
-title: "Code Tips Platform"
-description: "A centralized platform for storing and sharing code snippets, enabling developers to create, discover, and manage code examples across 100+ programming languages."
-image: "https://api.dicebear.com/9.x/glass/svg?seed=Jocelyn"
+title: "Autoencoder for Anomaly Detection"
+description: "Done as a ML / Data Science Intern @ Halliburton"
+image: ./Halliburton-Truck.jpg
 startDate: "2025-06-01"
 skills: ["Laravel", "Inertia JS", "Vue 3", "TypeScript", "Monaco Editor", "Tailwind CSS"]
-demoLink: "https://codetips.cloud"
 ---
 
-## About Code Tips
+**How do we identify potentially dangerous situations and act quickly in real time?**
 
-Code Tips is a community-driven platform designed to help developers share, discover, and manage code snippets efficiently. Built with the philosophy that knowledge sharing accelerates learning, it provides a centralized repository for code examples across multiple programming languages.
+## The Problem
 
-## Core Features
+We all know equipment maintenance is important for saving money, reducing waste, and preventing accidents as a result of equipment malfunctions.
 
-### Comprehensive Code Snippet Management
-- **Create & Edit**: Full-featured code editor powered by Monaco Editor
-- **100+ Language Support**: Extensive syntax highlighting for Python, JavaScript, TypeScript, Java, C++, Go, Rust, PHP, Ruby, and many more
-- **Organize Your Code**: Personal library for managing your code snippets
-- **CRUD Operations**: Complete control over your code tips - create, read, update, and delete
+In this case, we want to make sure company trucks function properly by monitoring the input data from the sensors on each truck. **How do we set up an alert system so that when the sensor has abnormal readings, we can immediately take a look at the equipment to prevent accidents?**
 
-### Social & Discovery Features
-- **Like System**: Show appreciation for useful code snippets
-- **Explore Public Tips**: Browse code examples shared by the community
-- **Browse by Language**: Filter and discover tips for specific programming languages
-- **User Profiles**: Public developer profiles showcasing contributions and statistics
-- **View & Share Tracking**: Monitor the reach and impact of your code tips
+Traditional statistical methods have many definitions for an outlier we could use to identify those readings. However, with so much sensor data, it might be better to use a larger scale ML model to identify these in real time so prompt action can be taken.
 
-### Search & Navigation
-- **CodeTip Search**: Quickly find relevant code examples
-- **Language Filters**: Navigate through language-specific collections
-- **Discovery Feed**: Explore trending and popular code snippets
+---
 
-## Technical Architecture
+## Idea: Reconstruction Autoencoder
 
-### Frontend Stack
-Built with modern web technologies for a smooth, reactive experience:
-- **Vue 3**: Progressive JavaScript framework with Composition API
-- **TypeScript**: Type-safe development for robust code
-- **Monaco Editor**: Industry-standard code editor (powers VS Code)
-- **Tailwind CSS**: Utility-first CSS framework for custom designs
-- **Ziggy**: Laravel route helper for seamless frontend routing
+This is where the **reconstruction autoencoder** comes into play.
 
-### Backend Infrastructure
-Powered by **Laravel** (PHP), the backend provides:
-- Route-based architecture with clean separation of concerns
-- RESTful API endpoints for all operations
-- Database-driven content management
-- Session-based authentication and user management
+We can use this machine learning model to identify anomalies in real time!  
+Before delving into how we created it, let’s break down what this means.
 
-### User Experience
-- **Light/Dark Mode**: Theme support with system preference detection
-- **Responsive Design**: Optimized for desktop and mobile devices
-- **OG Image Generation**: Social media preview images for shared snippets
-- **Component-Driven UI**: Modular, maintainable component architecture
+---
 
-## Authentication & User Management
-- Complete authentication system with login and registration
-- Email verification for account security
-- Password reset functionality
-- Social login integration for quick access
-- User profile customization
+## What even is an autoencoder?
 
-## Purpose & Impact
+An autoencoder is a type of neural network that takes in a large amount of high dimensional data and compresses the information into a smaller representation. After this, it expands the compressed representation into a representation of equal size to the original.
 
-Code Tips serves as a valuable resource for developers of all skill levels - from beginners learning new languages to experienced developers documenting solutions. By providing a centralized, searchable platform for code snippets, it helps developers:
+There are **two main parts** of the autoencoder:
 
-- Save time by reusing proven code patterns
-- Learn from community-shared examples
-- Document and organize their own code library
-- Share knowledge and contribute to the developer community
+## Autoencoder diagram
 
-The platform emphasizes collaboration and knowledge exchange, making programming resources more accessible to everyone.
+---
+
+## Encoder
+
+This is where we compress the input data into a smaller representation.
+
+For example, say we have a dataset with 500,000 dimensions. We create a representation of the data with only 300 dimensions.
+
+---
+
+## Decoder
+
+This is where we take the compressed representation and reconstruct the original data.
+
+In this example, we would take the 300 dimension representation and create a dataset with 500,000 dimensions (just like the original set).
+
+---
+
+## Why do we compress the data just to make one that's the same size as the original?
+
+It might seem useless to compress the info and then make it just as big. Isn’t the compressed version just a worse version of the original?  
+Compression means some data is lost so it can’t be as good, right?
+
+The true reason is that the eventual output isn’t the important part.  
+Instead, the **compressed version of the data** (also called the bottleneck) is what is important.
+
+---
+
+## How does the compressed data help us?
+
+Ideally, the compression forces the neural network to preserve as much important information as possible.  
+We make the bottleneck larger again so we can compare the original data against the compressed version.
+
+We plot the reconstructed output and the original output and look for large differences between the two.  
+If there is a big difference and the reconstruction contains the most important info, then we can identify anomalies by looking at where the differences are.  
+This is because if the most important information isn’t enough to estimate a value accurately, then it is likely not a typical value.
+
+---
+
+## What neural network architecture do we use?
+
+Now that we know what an autoencoder is, we know that it uses a neural network to accomplish its goal.  
+There are many different types of neural networks though, how do we choose the best type?
+
+The three main types (ANNs, CNNs, and RNNs) are all commonly used in ML models. One type of RNN, the LSTM, is especially popular for time series forecasting (what we are doing) because it mitigates the vanishing gradient issue of the default RNN while also allowing us to use momentum to preserve short term *and* long term trends in predictions.
+
+For our purposes though, with our large amount of data, an LSTM isn’t viable because of speed limitations and computational efficiency reasons.
+
+---
+
+## Introducing the Transformer
+
+If you’ve been anywhere near the ML community, I’m sure you’ve heard of the transformer. It’s being used everywhere in the Natural Language Processing (NLP) arena, being the basis of state of the art models like ChatGPT and Google’s BERT.
+
+Its origin comes from the famous  
+["Attention Is All You Need” paper](https://arxiv.org/abs/1706.03762),  
+which revolutionized the world of NLP but now is being used to transform the world of time series forecasting.  
+(If you want to learn more about how the transformer works and the original paper is a bit too abstract,  
+[here is an annotated explanation](https://nlp.seas.harvard.edu/annotated-transformer/) from Harvard NLP that breaks it down further)
+
+## Transformer image
+
+The characteristics of the transformer itself, such as its attention mechanism that we believe would better capture long and short term dependencies, seem to be more than suitable for our task. With its speed and ability to handle gigantic amounts of data, we decided this was the best basis for creating our time series forecasting ML model.
+
+---
+
+## Final Product
+
+From implementing this transformer-based autoencoder and training it on a large amount of sensor readings, we were able to produce a prediction model that identified outliers in a computationally efficient way. There remained another big question to solve, though.
+
+Even with the training and validation process, to be entirely sure we identify outliers correctly we need to train on *as much* data as possible to reduce the likelihood of false positives.
+
+With such large amounts of data that can’t fit in memory alone, how can we use that much for training? Think about ChatGPT for example, how do you train on the whole internet if a machine can’t come close to storing all of it?
+
+This leads us to the second project, [the Data Generator](/project2), which aims to resolve this issue!
+
+If you would like to see the code I used for this project or have any questions, feel free to contact me at any of the places listed in my contact section

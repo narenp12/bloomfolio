@@ -1,10 +1,12 @@
 ---
-title: "University of Technology"
-subtitle: "Bachelor of Science in Computer Science"
-logo: "https://api.dicebear.com/9.x/icons/svg?seed=Nolan"
-startDate: "2015-09-01"
-endDate: "2019-05-30"
-link: "https://university.edu"
+title: "University of California, Los Angeles (UCLA)"
+subtitle: "Bachelor of Science in Statistics and Data Science"
+logo: "https://brand.ucla.edu/images/identity/logos-and-marks/campus-seal.jpg"
+startDate: "2021-09"
+endDate: "2025-06"
+link: "https://statistics.ucla.edu/"
 ---
 
-Focused on software engineering, algorithms, and data structures. Graduated with honors and participated in various coding competitions.
+Emphasizing probability and mathematical statistics, regression and linear models, experimental design, statistical learning, and computational statistics, with applied work in Monte Carlo methods, text mining, optimization, and statistical consulting.
+
+Shoutout Professor Vivian Lew and Professor Nicolas Christou for making my experience unforgettable!

@@ -1,6 +1,10 @@
 ---
 title: "About Me"
-photo: "https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Destiny&scale=90&backgroundColor=763900,9e5622,ecad80,f2d3b1,c0aede,b6e3f4"
+photo: src/content/about/datafest.JPG
 ---
 
-I'm a full-stack developer with a passion for creating beautiful, functional, and user-friendly web applications. With experience in **modern frameworks and technologies**, I love turning ideas into reality through code. When I'm not coding, you can find me **exploring new technologies**, contributing to open source, or enjoying a good cup of coffee.
+I'm an aspiring statistician (hoping to get a PhD too) and lover of all things statistics. I was born and raised near Houston, Texas and lived there my entire life until going to college at UCLA.
+
+My primary interests are sports and anything to do with information. My goal is to keep learning about these exciting fields (and really anything I can learn) for as long as I can.
+
+This website is a fun little side thing for me to post about what I'm doing and just generally things I like!
